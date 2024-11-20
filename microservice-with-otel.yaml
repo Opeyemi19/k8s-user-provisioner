@@ -1,0 +1,114 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: sodikfatayo
+  name: zerofiltretech-provisioner-sodikfatayo
+data:
+  # Define otel env variables here
+  # OTEL_SERVICE_NAME: "zerofiltretech-provisioner-sodikfatayo"
+  # OTEL_PYTHON_LOG_CORRELATION: "..."
+  # OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: "..."
+  OTEL_PYHTON_LOG_LEVEL: "info"
+  # OTEL_LOGS_EXPORTER: "..."
+  # OTEL_TRACES_EXPORTER: "..."
+  # OTEL_METRICS_EXPORTER: "..."
+  # OTEL_EXPORTER_OTLP_ENDPOINT: "http://..."
+  OTEL_EXPORTER_OTLP_PROTOCOL: "http/protobuf"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  namespace: sodikfatayo
+  name: zerofiltretech-provisioner-sodikfatayo
+type: Opaque
+data:
+  VERIFICATION_TOKEN: bWF2YWxldXI=
+  KEYCLOAK_BASE_URL: bWF2YWxldXI=
+  KEYCLOAK_REALM: bWF2YWxldXI=
+  KEYCLOAK_CLIENT_ID: bWF2YWxldXI=
+  KEYCLOAK_CLIENT_SECRET: bWF2YWxldXI=
+  GRAFANA_PASSWORD: bWF2YWxldXI=
+  GRAFANA_USER: bWF2YWxldXI=
+  KUBE_CONFIG: bWF2YWxldXI=
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: sodikfatayo
+  name: zerofiltretech-provisioner-sodikfatayo
+spec:
+  minReadySeconds: 30
+  progressDeadlineSeconds: 120
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zerofiltretech-provisioner-sodikfatayo
+  template:
+    metadata:
+      labels:
+        app: zerofiltretech-provisioner-sodikfatayo
+    spec:
+      containers:
+        - name: zerofiltretech-provisioner-sodikfatayo
+          image: opeyemi19/zerofiltretech-provisioner:7_sodikfatayo
+          imagePullPolicy: IfNotPresent
+          ports:
+          - name: http-port
+            containerPort: 5000
+            protocol: TCP
+          envFrom:
+          - configMapRef:
+              name: zerofiltretech-provisioner-sodikfatayo
+          - secretRef:
+              name: zerofiltretech-provisioner-sodikfatayo
+          resources:
+            requests:
+              cpu: "0.1"
+              memory: '50Mi'
+            limits:
+              cpu: "0.5"
+              memory: 256Mi
+          livenessProbe:
+            tcpSocket:
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: sodikfatayo
+  name: zerofiltretech-provisioner-sodikfatayo
+spec:
+  ports:
+  - protocol: TCP
+    port: 5000
+    targetPort: 5000
+  selector:
+    app: zerofiltretech-provisioner-sodikfatayo
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   namespace: sodikfatayo
+#   name: zerofiltretech-provisioner-sodikfatayo
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#     cert-manager.io/cluster-issuer: letsencrypt-prod
+# spec:
+#   rules:
+#     - host: sodikfatayo-provisioner.zerofiltre.tech
+#       http:
+#         paths:
+#           - path: /
+#             pathType: Prefix
+#             backend:
+#               service:
+#                 name: zerofiltretech-provisioner-sodikfatayo
+#                 port:
+#                   number: 5000
+#   tls: 
+#   - hosts:
+#     - sodikfatayo-provisioner.zerofiltre.tech
+#     secretName: zerofiltretech-provisioner-sodikfatayo-cert

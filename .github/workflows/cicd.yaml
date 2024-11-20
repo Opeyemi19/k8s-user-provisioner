@@ -1,9 +1,6 @@
 name: Python CI/CD Pipeline with k8s
 
 on:
-  push:
-    branches: 
-      - '*'
   pull_request:
     branches: 
       - main
@@ -25,8 +22,6 @@ jobs:
       limits_memory : ${{startsWith(github.ref, 'refs/heads/release-') && '1.5Gi' || '1Gi' }}
       domain_name : ${{startsWith(github.ref, 'refs/heads/release-') && 'provisioner.zerofiltre.tech' || 'provisioner-dev.zerofiltre.tech'}}
       
-
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
