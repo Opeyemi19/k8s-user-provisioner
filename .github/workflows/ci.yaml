@@ -59,4 +59,4 @@ jobs:
         tags: opeyemi19/zerofiltretech-provisioner:${{ github.run_number }}_${{ env.DOCKER_TAG_SUFFIX }}
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache-new
-        # build-args: PROFILE=prod
+        build-args: PROFILE=prod
