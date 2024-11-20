@@ -9,7 +9,7 @@ data:
   OTEL_SERVICE_NAME: "zerofiltretech-provisioner-sodikfatayo"
   # OTEL_PYTHON_LOG_CORRELATION: "..."
   # OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED: "..."
-  OTEL_PYHTON_LOG_LEVEL: "info"
+  OTEL_PYHTON_LOG_LEVEL: "simple"
   # OTEL_LOGS_EXPORTER: "..."
   # OTEL_TRACES_EXPORTER: "..."
   # OTEL_METRICS_EXPORTER: "..."
